@@ -19,3 +19,6 @@ def get_tasks(request):
 def home(request):
   return HttpResponse("Server Backend Working Successfullyyy ! Hurrahhh")
 
+def testt(request):
+  return HttpResponse("Just Testing")
+
