@@ -5,6 +5,9 @@ from django.http import HttpResponse
 
 from .models import Task 
 from .serializers import TaskSerializer
+from .ai_parser import parse_content
+
+
 
 @api_view(['GET'])
 
@@ -24,7 +27,18 @@ def post_tasks(request):
     serializer.save()
 
     return Response({"messege" : "Task Create Chesan ra Babu"})
-  return serializer.errors
+  return Response(serializer.errors)
+
+
+@api_view(['POST'])
+
+def ai_command(request):
+
+  text = request.data.get("text")
+
+  result =  parse_content(text)
+  return Response(result)
+
 
 @api_view(['PATCH'])
 
@@ -41,7 +55,18 @@ def update_tasks(request,id):
     serializer.save()
     return Response(serializer.data)
   
-  return Response(serializer.errors )
+  return Response(serializer.errors)
+
+@api_view(['DELETE'])
+
+def delete_task(request,id):
+  try:
+    task = Task.objects.get(id=id)
+  except:
+    return Response({"messege" : "Delete avaledhu ra babu sariga delete chey"})
+  task.delete()
+  return Response({"messege" : "Delete ayindhi le"})
+
 
 
 
