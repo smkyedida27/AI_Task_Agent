@@ -15,6 +15,35 @@ def get_tasks(request):
 
   return Response(serializer.data)
 
+@api_view(['POST'])
+
+def post_tasks(request):
+  serializer = TaskSerializer(data = request.data)
+  
+  if serializer.is_valid():
+    serializer.save()
+
+    return Response({"messege" : "Task Create Chesan ra Babu"})
+  return serializer.errors
+
+@api_view(['PATCH'])
+
+def update_tasks(request,id):
+  
+  try:
+    task = Task.objects.get(id=id)
+  except:
+    return Response({"error" : "Data Kanipinchatle ra babu"})
+  
+  serializer = TaskSerializer(task,data = request.data,partial = True)
+
+  if serializer.is_valid():
+    serializer.save()
+    return Response(serializer.data)
+  
+  return Response(serializer.errors )
+
+
 
 def home(request):
   return HttpResponse("Server Backend Working Successfullyyy ! Hurrahhh")
