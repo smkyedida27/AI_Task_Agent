@@ -35,8 +35,21 @@ def post_tasks(request):
 def ai_command(request):
 
   text = request.data.get("text")
+  if not text:
+    return Response({"error": "text field required"})
+  text = text.lower()
 
   result =  parse_content(text)
+  
+  action = result.get("action")
+
+  if action == "create":
+
+    task = Task.objects.create(task_texts = text ,user_id = 1)
+
+    return Response({"message" : "Task create ayindhi le",
+                     "task" : task.task_texts})
+  
   return Response(result)
 
 
