@@ -84,7 +84,7 @@ def delete_task(request,id):
 
 
 def home(request):
-  return HttpResponse("Server Backend Working Successfullyyy ! Hurrahhh")
+  return HttpResponse("Server Backend Working Successfullyyy ! Hurrahh")
 
 def testt(request):
   return HttpResponse("Just Testing")
