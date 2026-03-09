@@ -7,30 +7,36 @@ from .models import Task
 from .serializers import TaskSerializer
 from .ai_parser import parse_content
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import  permission_classes
+
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 
 def get_tasks(request):
-  tasks = Task.objects.all()
+  tasks = Task.objects.filter(user = request.user)
 
   serializer = TaskSerializer(tasks,many=True)
 
   return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 
 def post_tasks(request):
   serializer = TaskSerializer(data = request.data)
   
   if serializer.is_valid():
-    serializer.save()
+    serializer.save(user = request.user)
 
     return Response({"messege" : "Task Create Chesan ra Babu"})
   return Response(serializer.errors)
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 
 def ai_command(request):
 
@@ -45,7 +51,7 @@ def ai_command(request):
 
   if action == "create":
 
-    task = Task.objects.create(task_texts = text ,user_id = 1)
+    task = Task.objects.create(task_texts = text ,user_id = request.user)
 
     return Response({"message" : "Task create ayindhi le",
                      "task" : task.task_texts})
@@ -54,11 +60,12 @@ def ai_command(request):
 
 
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 
 def update_tasks(request,id):
   
   try:
-    task = Task.objects.get(id=id)
+    task = Task.objects.get(id=id,user=request.user)
   except:
     return Response({"error" : "Data Kanipinchatle ra babu"})
   
@@ -71,10 +78,11 @@ def update_tasks(request,id):
   return Response(serializer.errors)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 
 def delete_task(request,id):
   try:
-    task = Task.objects.get(id=id)
+    task = Task.objects.get(id=id,request = request.user)
   except:
     return Response({"messege" : "Delete avaledhu ra babu sariga delete chey"})
   task.delete()
