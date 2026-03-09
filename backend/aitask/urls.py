@@ -18,9 +18,17 @@ from django.contrib import admin
 from django.urls import path,include
 from tasks.views import home,testt
 
+from rest_framework_simplejwt.views import(
+  TokenObtainPairView,
+  TokenRefreshView,
+)
+
 urlpatterns = [
     path('',home),
     path('mani',testt),
     path('admin/', admin.site.urls),
     path('api/',include('tasks.urls')),
+
+    path('api/token/',TokenObtainPairView.as_view()),
+    path('api/token/refresh/',TokenRefreshView.as_view()),
 ]
