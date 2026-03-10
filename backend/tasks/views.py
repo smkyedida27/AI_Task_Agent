@@ -10,6 +10,8 @@ from .ai_parser import parse_content
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import  permission_classes
 
+from services.task_service import handle_ai_command
+
 
 
 @api_view(['GET'])
@@ -45,16 +47,15 @@ def ai_command(request):
     return Response({"error": "text field required"})
   text = text.lower()
 
-  result =  parse_content(text)
-  
-  action = result.get("action")
+  result = handle_ai_command(text,request.user)  
+  # action = result.get("action")
 
-  if action == "create":
+  # if action == "create":
 
-    task = Task.objects.create(task_texts = text ,user_id = request.user)
+  #   task = Task.objects.create(task_texts = text ,user_id = request.user)
 
-    return Response({"message" : "Task create ayindhi le",
-                     "task" : task.task_texts})
+  #   return Response({"message" : "Task create ayindhi le",
+  #                    "task" : task.task_texts})
   
   return Response(result)
 
