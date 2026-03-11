@@ -1,6 +1,6 @@
 from sklearn.metrics.pairwise import cosine_similarity
 
-from embeddings import get_embeddings
+from ai.embeddings import get_embeddings
 
 def find_similarity(user_text,tasks):
 
