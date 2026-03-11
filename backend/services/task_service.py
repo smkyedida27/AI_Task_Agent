@@ -21,7 +21,14 @@ def handle_ai_command(text,user):
   matched_task = find_similarity(task,task_list)
 
   if action == "delete":
-    task = 
+    task = Task.objects.filter(task_texts = matched_task,user=user).first()
+    task.delete()
+
+  if action == "update":
+    task_status = True
+    task.save()
+
+    return {"message" : "Task Complete chesav","task" : matched_task}
 
 
   # if action == "create":
