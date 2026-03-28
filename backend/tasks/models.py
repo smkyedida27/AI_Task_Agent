@@ -14,4 +14,16 @@ class Task(models.Model):
   def __str__(self):
     return self.task_text
 
+class CommandHistory(models.Model):
+  user = models.ForeignKey(User,on_delete=models.CASCADE)
+  command = models.TextField()
+
+  created_at = models.DateTimeField(auto_now_add = True)
+  
+  def __str__(self):
+    return self.command
+
+
+
+
 
