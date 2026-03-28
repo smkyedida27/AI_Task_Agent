@@ -1,23 +1,24 @@
 from sklearn.metrics.pairwise import cosine_similarity
-
 from ai.embeddings import get_embeddings
 
-def find_similarity(user_text,tasks):
 
-  user_vector = get_embeddings(user_text)
+def find_similarity(user_text, tasks):
 
-  best_score = -1
-  best_task = None
+    user_vector = get_embeddings(user_text)
 
-  for task in tasks:
+    best_score = -1
+    best_task = None
 
-    task_vector = get_embeddings(task)
+    for task in tasks:
+        task_vector = get_embeddings(task)
 
-    score = cosine_similarity([user_vector],[task_vector])[0][0]
+        score = cosine_similarity(
+            [user_vector],
+            [task_vector]
+        )[0][0]
 
-    if score > best_score:
-      best_score = score 
-      best_task = task
-  
-  return best_task
-#committing starr
+        if score > best_score:
+            best_score = score
+            best_task = task
+
+    return best_task

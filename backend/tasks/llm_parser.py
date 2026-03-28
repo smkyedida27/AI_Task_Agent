@@ -44,8 +44,18 @@ import os
 import json
 from dotenv import load_dotenv
 from groq import Groq
+import certifi
+import httpx
+
 
 load_dotenv()
+
+
+
+http_client = httpx.Client(verify=certifi.where())
+client  = Groq(api_key = api_key,)
+
+
 
 api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=api_key)
@@ -57,13 +67,17 @@ def parse_content(text, last_command="", task_list=None):
         task_list = []
 
     prompt = f"""
-You are an AI task assistant.
+You are an AI semantic parser for a task assistant.
 
-Your job is to extract:
-1. action
-2. task
+Your only job is to understand:
+1. user intention
+2. task reference
 
-Use previous memory and existing tasks to resolve references.
+Possible intentions:
+- new_task → user wants to add a task
+- completed_task → user says task is done
+- remove_task → user wants to delete a task
+- fetch_tasks → user wants to see current or pending tasks
 
 Previous command:
 {last_command}
@@ -74,22 +88,12 @@ Existing tasks:
 Current user input:
 {text}
 
-Possible actions:
-- create
-- update
-- delete
+Understand any natural language including Telugu-English mixed language.
 
-Understand references like:
-- it
-- adhi
-- aa task
-- that one
-- previous one
-
-Return ONLY valid JSON in this format:
+Return ONLY valid JSON:
 {{
-    "action": "create/update/delete",
-    "task": "resolved task"
+    "intent": "new_task/completed_task/remove_task/fetch_tasks",
+    "task_reference": "task meaning or empty string"
 }}
 """
 
@@ -112,6 +116,6 @@ Return ONLY valid JSON in this format:
 
     except:
         return {
-            "action": "create",
-            "task": text
+            "intent": "new_task",
+            "task_reference": text
         }
