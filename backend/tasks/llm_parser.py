@@ -52,13 +52,13 @@ load_dotenv()
 
 
 
-http_client = httpx.Client(verify=certifi.where())
-client  = Groq(api_key = api_key,)
 
 
 
 api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=api_key)
+http_client = httpx.Client(verify=certifi.where())
+client  = Groq(api_key = api_key,http_client=http_client)
 
 
 def parse_content(text, last_command="", task_list=None):
